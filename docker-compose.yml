@@ -1,0 +1,50 @@
+services:
+  qdrant:
+    image: qdrant/qdrant:latest
+    container_name: groundrag_qdrant
+    ports:
+      - "6333:6333"
+      - "6334:6334"
+    volumes:
+      - qdrant_data:/qdrant/storage
+    networks:
+      - groundrag_network
+
+  backend:
+    build: ./backend
+    container_name: groundrag_backend
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./backend/.env
+    depends_on:
+      - qdrant
+    networks:
+      - groundrag_network
+    volumes:
+      - ./backend/app:/app/app
+    environment:
+      - QDRANT_HOST=qdrant
+
+  frontend:
+    build: ./frontend
+    container_name: groundrag_frontend
+    ports:
+      - "8501:8501"
+    env_file:
+      - ./frontend/.env
+    environment:
+      - BACKEND_API_URL=http://backend:8000
+    depends_on:
+      - backend
+    networks:
+      - groundrag_network
+    volumes:
+      - ./frontend:/app
+
+volumes:
+  qdrant_data:
+
+networks:
+  groundrag_network:
+    driver: bridge
