@@ -334,7 +334,6 @@ Apache 2.0 License
 
 ## 🙏 Acknowledgments
 
-- **MASA Project** (Kaggle): Reference implementation
 - **HuggingFace**: smolagents framework
 - **Google AI**: Gemini 2.0 Flash API
 - **Qdrant**: Vector database
